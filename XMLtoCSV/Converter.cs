@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -41,12 +42,21 @@ namespace XMLtoCSV
        private string ToStr(IEnumerable<string> list)
         {
             StringBuilder itemStringBuilder = new StringBuilder();
-
+            var itemCounter = 0;
             foreach (var item in list)
             {
-                itemStringBuilder.Append(XmlItemConverToCsvItem(item) + ",");
-            }
 
+                if (itemCounter != list.Count() - 1)
+                {
+                    itemStringBuilder.Append(XmlItemConverToCsvItem(item) + ",");
+                }
+                else
+                {
+                    itemStringBuilder.Append(XmlItemConverToCsvItem(item));
+                }
+                itemCounter++;
+            }
+           
             return itemStringBuilder.ToString();
         }
 
