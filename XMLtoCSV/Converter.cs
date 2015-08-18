@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,26 +15,28 @@ namespace XMLtoCSV
 	/// CODE REVIEW SUMMARY:
 	/// 0) Read documentation and task more accurate. The task says that path to the file is provided 
 	///    as the first command line argument. But you hardcoded it in the Program.cs.
-	/// 1) Better names that help to understand better and faster the purpose of each class/method.
+	/// 1) Performance. Do not use heavy operations. Especially inside of a loop. Search for better/faster 
+	///	   approach.
+	/// 2) Better names that help to understand better and faster the purpose of each class/method.
 	///	   With first look on the Converter it's not clear what it does. There are two reasons for it.
 	///	   First:  the name of the class or it's Convert method doesn't says anything about it's purpose. We 
 	///			   only know that it converts something into something. Better class name would help.
 	///	   Second: comments could help with understanding it's purpose. Although better naming would be much 
 	///			   better approach.
-	/// 2) Comments:
+	/// 3) Comments:
 	///		- lack of comments for the Converter class and two of it's methods.
 	///		- not enough comments inside of methods. Although they are not so complicated but still
 	///		  it requires some time to understand the algorithm of each method. When you comment 
 	///		  algorithm other developer can read through all comments in the method and understand 
 	///		  it much faster.
-	/// 3) Exception. Use more specific exceptions.
-	/// 4) "var" keyword. Best practice: 
+	/// 4) Exception. Use more specific exceptions.
+	/// 5) "var" keyword. Best practice: 
 	///		DO use it when a type is obvious
 	///			Example: var converter = new Converter();
 	/// 
 	///		DO NOT use it when a type is not obvious.
 	///			Example: IEnumerable<XElement> rows = xElement.Elements().Elements( "row" );
-	/// 5) Not all lines or code were alighned in a straight line. Use only tabs (Tab key) for formatting.
+	/// 6) Not all lines or code were alighned in a straight line. Use only tabs (Tab key) for formatting.
 	///	   Use Edit -> Advance -> Format Document (Ctrl + K, Ctrl + D) to reformat the document.
 	/// </remarks>
 	public class Converter
@@ -73,11 +76,20 @@ namespace XMLtoCSV
 		private string ToCsvRow(IEnumerable<string> list)
 		{
 			var itemStringBuilder = new StringBuilder();
-
-			// DO NOT use "var" here because the type is not 
+			// you won't need to do this with the for (...) loop.
+			var itemCounter = 0;
+			// DO NOT use "var" here because the type is not obvious.
 			foreach ( string item in list ) {
-				// BUG: you don't need to have a "," after the last value.
-				itemStringBuilder.Append( XmlItemConverToCsvItem( item ) + "," );
+				// IMPORTANT: not optimized. It will count items inside the list on every iteration.
+				//			  There is other loop that will fit this purpose better. for (...) instead of foreach.
+				if ( itemCounter != list.Count() - 1 )
+                {
+					itemStringBuilder.Append( XmlItemConverToCsvItem( item ) + "," );
+				} else {
+					itemStringBuilder.Append( XmlItemConverToCsvItem( item ) );
+				}
+				// you won't need to do this with the for (...) loop.
+				itemCounter++;
 			}
 
 			return itemStringBuilder.ToString();
