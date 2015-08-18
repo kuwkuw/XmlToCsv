@@ -46,7 +46,7 @@ namespace XMLtoCSV
             foreach (var item in list)
             {
 
-                if (itemCounter != list.Count() - 1)
+                if (itemCounter != list.Count() - 1)//Check for last item
                 {
                     itemStringBuilder.Append(XmlItemConverToCsvItem(item) + ",");
                 }
